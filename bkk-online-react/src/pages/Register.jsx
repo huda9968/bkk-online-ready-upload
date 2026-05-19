@@ -8,6 +8,7 @@ export default function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [adminPasscode, setAdminPasscode] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
@@ -19,6 +20,16 @@ export default function Register() {
         setLoading(true);
         setError(null);
         setSuccessMsg(null);
+
+        // Validasi Kode Rahasia Admin
+        if (role === 'admin') {
+            const secretPass = import.meta.env.VITE_ADMIN_PASSCODE || "BKK_RADEN_RAHMAT_2026";
+            if (adminPasscode !== secretPass) {
+                setError("Kode Rahasia Admin salah! Anda tidak memiliki izin untuk mendaftar.");
+                setLoading(false);
+                return;
+            }
+        }
 
         const { data, error } = await signUp({
             email,
@@ -145,6 +156,24 @@ export default function Register() {
                                 />
                             </div>
                         </div>
+
+                        {/* Input Kode Rahasia Admin (Hanya muncul jika memilih role Admin) */}
+                        {role === 'admin' && (
+                            <div className="form-group" style={{ marginTop: '20px', animation: 'fadeIn 0.3s ease' }}>
+                                <label className="form-label" style={{ color: '#ef4444' }}>Kode Rahasia Otentikasi Admin</label>
+                                <div className="search-box" style={{ border: '1px solid rgba(239, 68, 68, 0.4)' }}>
+                                    <WarningCircle weight="bold" color="#ef4444" />
+                                    <input 
+                                        type="password" 
+                                        placeholder="Masukkan kode otentikasi admin..." 
+                                        value={adminPasscode}
+                                        onChange={(e) => setAdminPasscode(e.target.value)}
+                                        required 
+                                    />
+                                </div>
+                                <p style={{ fontSize: '12px', color: '#ef4444', marginTop: '5px' }}>Hanya untuk administrator resmi sekolah BKK.</p>
+                            </div>
+                        )}
 
                         <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', marginTop: '30px', padding: '16px', justifyContent: 'center' }}>
                             {loading ? "Memproses..." : <><UserPlus weight="bold" size={20} /> Daftar Sekarang</>}
