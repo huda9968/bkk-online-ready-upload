@@ -29,6 +29,13 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           } />
+          <Route path="*" element={
+            <div className="container" style={{ textAlign: 'center', padding: '100px 0' }}>
+              <h2 style={{ fontSize: '48px', color: 'var(--primary)', marginBottom: '10px' }}>404</h2>
+              <h3>Halaman Tidak Ditemukan</h3>
+              <p style={{ color: 'var(--text-muted)', marginTop: '10px' }}>Maaf, halaman yang Anda cari tidak ada atau telah dipindahkan.</p>
+            </div>
+          } />
         </Routes>
         <Footer />
       </Router>
